@@ -1,13 +1,11 @@
 #!/usr/bin/python3
-import json
 import sys
 
 
 def read_map_output(line):
     parts = line.strip().split('\t')
     category = parts[0]
-    info = json.loads(parts[1])
-    video_id, country = info['video_id'], info['country']
+    video_id, country = parts[1].split(',')
     return category, video_id, country
 
 
@@ -19,30 +17,23 @@ def output(category, country_dict):
 
 def tag_reducer():
     """
-    Input: category    {"video_id": "nIYrRNklra8", "country": "CA"}
+    Input: category    video_id,country
     Output: category: 1.4
     """
     current_category = ''
     trending_countries = {}
     for line in sys.stdin:
-        parts = line.strip().split('\t')
-        category = parts[0]
+        category, video_id, country = read_map_output(line)
         if not current_category:
             current_category = category
-        try:
-            info = json.loads(parts[1])
-        except json.decoder.JSONDecodeError:
-            pass
-        else:
-            video_id, country = info['video_id'], info['country']
-            if category != current_category and current_category:
-                # receiving data with new category means last category finished
-                output(current_category, trending_countries)
-                trending_countries = {}
-                current_category = category
-            country_set = trending_countries.get(video_id, set())
-            country_set.add(country)
-            trending_countries[video_id] = country_set
+        elif category != current_category:
+            # receiving data with new category means last category finished
+            output(current_category, trending_countries)
+            trending_countries.clear()
+            current_category = category
+        country_set = trending_countries.get(video_id, set())
+        country_set.add(country)
+        trending_countries[video_id] = country_set
     output(current_category, trending_countries)
 
 

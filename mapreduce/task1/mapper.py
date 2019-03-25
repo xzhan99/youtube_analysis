@@ -1,43 +1,42 @@
 #!/usr/bin/python3
-import json
 import sys
 
 
 class TrendingVideo(object):
-    video_id = None
-    trending_date = None
-    views = 0
-    likes = 0
-    dislikes = 0
-    country = None
-    category = None
+    def __init__(self):
+        self.video_id = None
+        self.trending_date = None
+        self.views = 0
+        self.likes = 0
+        self.dislikes = 0
+        self.country = None
+        self.category = None
 
-    def __init__(self, line):
-        parts = line.strip().split(',')
-        self.video_id = parts[1].strip()
-        self.trending_date = parts[2].strip()
-        self.views = int(parts[4].strip())
-        self.likes = int(parts[5].strip())
-        self.dislikes = int(parts[6].strip())
-        self.country = parts[7].strip()
-        self.category = parts[8].strip()
+
+def extract_video_info(line):
+    video = TrendingVideo()
+    parts = line.strip().split(',')
+    video.video_id = parts[1].strip()
+    video.trending_date = parts[2].strip()
+    video.views = int(parts[4].strip())
+    video.likes = int(parts[5].strip())
+    video.dislikes = int(parts[6].strip())
+    video.country = parts[7].strip()
+    video.category = parts[8].strip()
+    return video
 
 
 def tag_mapper():
     """
     Input: i,video_id,trending_date,category_id,views,likes,dislikes,country,category
-    Output: category    {"video_id": "nIYrRNklra8", "country": "CA"}
+    Output: category    video_id,country
     """
     for index, line in enumerate(sys.stdin):
         if index == 0:
             continue
 
         video = TrendingVideo(line)
-        info = {
-            'video_id': video.video_id,
-            'country': video.country
-        }
-        print('%s\t%s' % (video.category, json.dumps(info, ensure_ascii=False)))
+        print('{key}\t{meta}'.format(key=video.category, meta='%s,%s' % (video.video_id, video.country)))
 
 
 if __name__ == "__main__":
