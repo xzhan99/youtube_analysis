@@ -34,8 +34,7 @@ def tag_mapper():
     for index, line in enumerate(sys.stdin):
         if index == 0:
             continue
-
-        video = TrendingVideo(line)
+        video = extract_video_info(line)
         print('{key}\t{meta}'.format(key=video.category, meta='%s,%s' % (video.video_id, video.country)))
 
 
