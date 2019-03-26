@@ -7,12 +7,11 @@ if [ $# -ne 2 ]; then
 fi
 
 hadoop jar /usr/lib/hadoop/hadoop-streaming-2.8.5-amzn-1.jar \
--D mapreduce.job.reduces=4 \
--D stream.map.output.field.separator=, \
--D mapreduce.job.name='Tag owner inverted list' \
--file task_one_mapper.py \
--file task_one_reducer.py \
--mapper task_one_mapper.py \
--reducer task_one_reducer.py \
+-D mapreduce.job.reduces=3 \
+-D mapreduce.job.name='Task2' \
+-file mapper.py \
+-file reducer.py \
+-mapper mapper.py \
+-reducer reducer.py \
 -input $1 \
 -output $2

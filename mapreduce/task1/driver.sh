@@ -8,7 +8,7 @@ fi
 
 hadoop jar /usr/lib/hadoop/hadoop-streaming-2.8.5-amzn-1.jar \
 -D mapreduce.job.reduces=3 \
--D mapreduce.job.name='Tag owner inverted list' \
+-D mapreduce.job.name='Task1' \
 -file mapper.py \
 -file reducer.py \
 -mapper mapper.py \
