@@ -12,18 +12,18 @@ class TrendingVideo(object):
         self.country = None
         self.category = None
 
-
-def extract_video_info(line):
-    video = TrendingVideo()
-    parts = line.strip().split(',')
-    video.video_id = parts[1].strip()
-    video.trending_date = parts[2].strip()
-    video.views = int(parts[4].strip())
-    video.likes = int(parts[5].strip())
-    video.dislikes = int(parts[6].strip())
-    video.country = parts[7].strip()
-    video.category = parts[8].strip()
-    return video
+    @classmethod
+    def extract_video_info(cls, line):
+        video = TrendingVideo()
+        parts = line.strip().split(',')
+        video.video_id = parts[1].strip()
+        video.trending_date = parts[2].strip()
+        video.views = int(parts[4].strip())
+        video.likes = int(parts[5].strip())
+        video.dislikes = int(parts[6].strip())
+        video.country = parts[7].strip()
+        video.category = parts[8].strip()
+        return video
 
 
 def tag_mapper():
@@ -34,7 +34,7 @@ def tag_mapper():
     for index, line in enumerate(sys.stdin):
         if index == 0:
             continue
-        video = extract_video_info(line)
+        video = TrendingVideo.extract_video_info(line)
         print('{key}\t{meta}'.format(key=video.category, meta='%s,%s' % (video.video_id, video.country)))
 
 
