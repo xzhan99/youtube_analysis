@@ -40,6 +40,14 @@ def add_columns(data_frame, country):
     add_category()
 
 
+def remove_invalid_id(data_frame):
+    invalid_rows = []
+    for index, row in data_frame.iterrows():
+        if row['video_id'].strip() == '#NAME?' or row['video_id'].startswith('-'):
+            invalid_rows.append(index)
+    data_frame.drop(invalid_rows, axis=0, inplace=True)
+
+
 if __name__ == '__main__':
     all_videos = None
     for country in COUNTRIES:
@@ -49,4 +57,5 @@ if __name__ == '__main__':
             all_videos = pd.concat([all_videos, df])
         else:
             all_videos = df
+    remove_invalid_id(all_videos)
     save_to_csv_file(all_videos)
