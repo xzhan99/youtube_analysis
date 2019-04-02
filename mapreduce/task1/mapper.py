@@ -16,17 +16,17 @@ class TrendingVideo(object):
     def extract_video_info(cls, line):
         video = TrendingVideo()
         parts = line.strip().split(',')
-        video.video_id = parts[1].strip()
-        video.trending_date = parts[2].strip()
-        video.views = int(parts[4].strip())
-        video.likes = int(parts[5].strip())
-        video.dislikes = int(parts[6].strip())
-        video.country = parts[7].strip()
-        video.category = parts[8].strip()
+        video.video_id = parts[0].strip()
+        video.trending_date = parts[1].strip()
+        video.views = int(parts[5].strip())
+        video.likes = int(parts[6].strip())
+        video.dislikes = int(parts[7].strip())
+        video.country = parts[11].strip()
+        video.category = parts[3].strip()
         return video
 
 
-def tag_mapper():
+def mapper():
     """
     Input: i,video_id,trending_date,category_id,views,likes,dislikes,country,category
     Output: category    video_id,country
@@ -39,4 +39,4 @@ def tag_mapper():
 
 
 if __name__ == "__main__":
-    tag_mapper()
+    mapper()
