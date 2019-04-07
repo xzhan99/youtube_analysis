@@ -11,4 +11,3 @@ spark-submit \
     spark_scripts.py \
     --input $1 \
     --output $2
-    
