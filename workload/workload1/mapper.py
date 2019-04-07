@@ -2,28 +2,16 @@
 import sys
 
 
-class TrendingVideo(object):
-    def __init__(self):
-        self.video_id = None
-        self.trending_date = None
-        self.views = 0
-        self.likes = 0
-        self.dislikes = 0
-        self.country = None
-        self.category = None
-
-    @classmethod
-    def extract_video_info(cls, line):
-        video = TrendingVideo()
-        parts = line.strip().split(',')
-        video.video_id = parts[0].strip()
-        video.trending_date = parts[1].strip()
-        video.category = parts[3].strip()
-        video.views = int(parts[5].strip())
-        video.likes = int(parts[6].strip())
-        video.dislikes = int(parts[7].strip())
-        video.country = parts[11].strip()
-        return video
+def extract_video_info(line):
+    parts = line.strip().split(',')
+    if len(parts) != 12:
+        return None
+    video = {
+        'video_id': parts[0].strip(),
+        'category': parts[3].strip(),
+        'country': parts[11].strip()
+    }
+    return video
 
 
 def mapper():
@@ -34,8 +22,9 @@ def mapper():
     for index, line in enumerate(sys.stdin):
         if index == 0:
             continue
-        video = TrendingVideo.extract_video_info(line)
-        print('{key}\t{meta}'.format(key=video.category, meta='%s,%s' % (video.video_id, video.country)))
+        video = extract_video_info(line)
+        if video:
+            print('{key}\t{value}'.format(key=video['category'], value='%s,%s' % (video['video_id'], video['country'])))
 
 
 if __name__ == "__main__":
