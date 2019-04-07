@@ -18,11 +18,11 @@ class TrendingVideo(object):
         parts = line.strip().split(',')
         video.video_id = parts[0].strip()
         video.trending_date = parts[1].strip()
+        video.category = parts[3].strip()
         video.views = int(parts[5].strip())
         video.likes = int(parts[6].strip())
         video.dislikes = int(parts[7].strip())
         video.country = parts[11].strip()
-        video.category = parts[3].strip()
         return video
 
 
