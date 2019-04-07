@@ -57,7 +57,7 @@ if __name__ == "__main__":
     # reduce and only keep earliest two data for each key
     init_value = {'date': MAX_DATE, 'difference': 0}
     video_diff = video_by_id_country.aggregateByKey((init_value, init_value), merge, combine, 1)
-    # calculate difference by diff = (dislikes2 - likes2) - (likes2 - likes1), then select top 10
+    # calculate difference by diff = (dislikes2 - likes2) - (dislikes1 - likes1), then select top 10
     result = video_diff.map(cal_diff).sortBy(lambda x: x[1], ascending=False).take(10)
     # save to file
     sc.parallelize(result).saveAsTextFile(output_path)
