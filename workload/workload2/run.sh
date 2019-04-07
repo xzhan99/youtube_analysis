@@ -1,7 +1,14 @@
 #!/bin/bash
 
+if [ $# -ne 2 ]; then
+    echo "Invalid number of parameters!"
+    echo "Usage: ./run.sh [input_location] [output_location]"
+    exit 1
+fi
+
 spark-submit \
     --master local[4] \
     spark_scripts.py \
-    --input file:///home/hadoop/task2/AllVideos_short.csv \
-    --output file:///home/hadoop/task2/output
+    --input $1 \
+    --output $2
+    
