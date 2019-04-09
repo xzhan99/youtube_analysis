@@ -8,12 +8,12 @@ MAX_DATE = datetime(9999, 1, 1)
 
 def generate_pair(line):
     parts = line.split(',')
-    video_id = parts[0].strip()
+    video_id = parts[0].strip().encode('utf-8')
     trending_date = datetime.strptime(parts[1].strip(), "%y.%d.%m")
-    category = parts[3].strip()
+    category = parts[3].strip().encode('utf-8')
     likes = int(parts[6].strip())
     dislikes = int(parts[7].strip())
-    country = parts[11].strip()
+    country = parts[11].strip().encode('utf-8')
     return (video_id, country, category), (trending_date, likes, dislikes)
 
 
@@ -33,12 +33,18 @@ def combine(pair1, pair2):
     return combined_list[:2]
 
 
-def cal_diff(rdd):
-    key, value = rdd
+def calculate_difference(pair):
+    key, value = pair
     video1, video2 = value
     if video1['date'] == MAX_DATE or video2['date'] == MAX_DATE:
         return key, 0
     return key, video2['difference'] - video1['difference']
+
+
+def reformat(pair):
+    key, difference = pair
+    video_id, country, category = key
+    return video_id, difference, category, country
 
 
 if __name__ == "__main__":
@@ -58,6 +64,10 @@ if __name__ == "__main__":
     init_value = {'date': MAX_DATE, 'difference': 0}
     video_diff = video_by_id_country.aggregateByKey((init_value, init_value), merge, combine, 1)
     # calculate difference by diff = (dislikes2 - likes2) - (dislikes1 - likes1), then select top 10
-    result = video_diff.map(cal_diff).sortBy(lambda x: x[1], ascending=False).take(10)
+    result = video_diff.map(calculate_difference).sortBy(lambda x: x[1], ascending=False).take(10)
+    # reformat
+    result = sc.parallelize(result).map(reformat)
     # save to file
-    sc.parallelize(result).saveAsTextFile(output_path)
+    result.saveAsTextFile(output_path)
+
+    sc.stop()
