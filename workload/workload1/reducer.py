@@ -13,7 +13,7 @@ def read_combiner_output(line):
 def output(category, country_dict):
     total = sum(map(lambda x: len(x), country_dict.values()))
     num_of_videos = len(country_dict)
-    print('%s: %s' % (category, total / num_of_videos))
+    print('%s: %s' % (category, round(total / num_of_videos, ndigits=2)))
 
 
 def reducer():
