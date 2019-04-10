@@ -16,7 +16,7 @@ def extract_video_info(line):
 
 def mapper():
     """
-    Input: i,video_id,trending_date,category_id,views,likes,dislikes,country,category
+    Input: video_id,trending_date,category_id,views,likes,dislikes,country,category
     Output: category    video_id,country
     """
     for index, line in enumerate(sys.stdin):
