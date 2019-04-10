@@ -44,7 +44,7 @@ def calculate_difference(pair):
 def reformat(pair):
     key, difference = pair
     video_id, country, category = key
-    return ','.join(video_id, difference, category, country)
+    return video_id, difference, category, country
 
 
 if __name__ == "__main__":
